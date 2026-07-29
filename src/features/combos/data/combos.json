@@ -1,0 +1,34 @@
+[
+  {
+    "id": "combo-1",
+    "nome": "1 Trufa",
+    "quantidade": 1,
+    "pesoPorUnidade": "50g cada",
+    "preco": 6.00,
+    "imagem": "/images/combos/1-trufa.png"
+  },
+  {
+    "id": "combo-3",
+    "nome": "3 Trufas",
+    "quantidade": 3,
+    "pesoPorUnidade": "50g cada",
+    "preco": 16.00,
+    "imagem": "/images/combos/3-trufas.png"
+  },
+  {
+    "id": "combo-5",
+    "nome": "5 Trufas",
+    "quantidade": 5,
+    "pesoPorUnidade": "50g cada",
+    "preco": 25.00,
+    "imagem": "/images/combos/5-trufas.png"
+  },
+  {
+    "id": "combo-10",
+    "nome": "10 Trufas",
+    "quantidade": 10,
+    "pesoPorUnidade": "50g cada",
+    "preco": 45.00,
+    "imagem": "/images/combos/10-trufas.png"
+  }
+]

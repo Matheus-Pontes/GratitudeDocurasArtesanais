@@ -1,0 +1,27 @@
+:root {
+  /* Paleta — extraída do cardápio Gratitude */
+  --gr-berry-900: #5c0f2c;   /* faixa "Linha Premium" */
+  --gr-berry-700: #8c1f4a;
+  --gr-berry-600: #a8285a;
+  --gr-pink-500: #d6336c;    /* rosa vivo do título "Gratitude" */
+  --gr-pink-300: #f2a9c4;
+  --gr-gold-500: #c99a3f;
+  --gr-gold-300: #e6c887;
+  --gr-cream-100: #fdf6f0;
+  --gr-cream-200: #fbeee4;
+  --gr-cream-300: #f5e2d3;
+  --gr-cacao-900: #3a1f28;
+  --gr-cacao-600: #6b4a44;
+
+  /* Tipografia */
+  --gr-font-display: 'Playfair Display', serif;
+  --gr-font-script: 'Caveat', cursive;
+  --gr-font-body: 'Poppins', sans-serif;
+
+  /* Espaçamento e forma */
+  --gr-radius-sm: 10px;
+  --gr-radius-md: 18px;
+  --gr-radius-lg: 28px;
+  --gr-shadow-card: 0 10px 30px -12px rgba(92, 15, 44, 0.28);
+  --gr-shadow-card-hover: 0 18px 40px -14px rgba(92, 15, 44, 0.38);
+}

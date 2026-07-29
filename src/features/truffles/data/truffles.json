@@ -1,0 +1,90 @@
+[
+  {
+    "id": "premium-ninho-nutella",
+    "nome": "Ninho com Nutella",
+    "descricao": "Trufa de leite Ninho recheada com Nutella cremosa.",
+    "linha": "premium",
+    "preco": 8.50,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/premium/ninho-nutella.png",
+    "disponivelEmCombo": false
+  },
+  {
+    "id": "premium-limao-siciliano",
+    "nome": "Limão Siciliano com Casca de Chocolate Branca",
+    "descricao": "Recheio refrescante de limão siciliano envolto em casca de chocolate branco.",
+    "linha": "premium",
+    "preco": 8.50,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/premium/limao-siciliano.png",
+    "disponivelEmCombo": false
+  },
+  {
+    "id": "premium-pacoca",
+    "nome": "Paçoca",
+    "descricao": "Chocolate ao leite recheado com paçoca crocante.",
+    "linha": "premium",
+    "preco": 8.50,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/premium/pacoca.png",
+    "disponivelEmCombo": false
+  },
+  {
+    "id": "trad-maracuja",
+    "nome": "Maracujá",
+    "descricao": "Trufa cremosa de maracujá com toque refrescante.",
+    "linha": "tradicional",
+    "preco": 6.00,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/tradicional/maracuja.png",
+    "disponivelEmCombo": true
+  },
+  {
+    "id": "trad-brigadeiro",
+    "nome": "Brigadeiro",
+    "descricao": "Clássico brigadeiro com granulado, intenso e delicioso.",
+    "linha": "tradicional",
+    "preco": 6.00,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/tradicional/brigadeiro.png",
+    "disponivelEmCombo": true
+  },
+  {
+    "id": "trad-prestigio",
+    "nome": "Prestígio",
+    "descricao": "Chocolate e coco em uma combinação que nunca sai de moda.",
+    "linha": "tradicional",
+    "preco": 6.00,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/tradicional/prestigio.png",
+    "disponivelEmCombo": true
+  },
+  {
+    "id": "trad-morango",
+    "nome": "Morango",
+    "descricao": "Trufa de morango cremosa com pedacinhos de fruta.",
+    "linha": "tradicional",
+    "preco": 6.00,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/tradicional/morango.png",
+    "disponivelEmCombo": true
+  },
+  {
+    "id": "trad-ninho",
+    "nome": "Ninho",
+    "descricao": "Trufa de leite Ninho cremosa e irresistível.",
+    "linha": "tradicional",
+    "preco": 6.00,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/tradicional/ninho.png",
+    "disponivelEmCombo": true
+  }
+]
