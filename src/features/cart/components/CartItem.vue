@@ -15,7 +15,6 @@ const cart = useCartStore()
 const composicaoLocal = ref([])
 
 const subtotal = computed(() => formatCurrency(props.item.preco * props.item.quantidade))
-const precoUnitario = computed(() => formatCurrency(props.item.preco))
 const composicaoTexto = computed(() => props.item.composicaoTexto || '')
 const isCombo = computed(() => props.item.tipo === 'combo')
 const limiteComposicao = computed(() => Number(props.item.quantidadeTotal || props.item.quantidade || 0))
@@ -67,15 +66,22 @@ watch(
 
 <template>
   <li class="cart-item">
-    <img class="cart-item__img" :src="item.imagem" :alt="item.nome" />
-    <div class="cart-item__info">
-      <div class="cart-item__info_details">
-        <p class="cart-item__nome">{{ item.nome }}</p>
-        <span class="cart-item__subtotal">{{ subtotal }}</span>
-      </div>
-      <p v-if="composicaoTexto" class="cart-item__details">{{ composicaoTexto }}</p>
-      <p class="cart-item__preco-unit">{{ precoUnitario }} / un.</p>
 
+    <div class="cart-item__info">
+      <figure class="cart-item__img">
+        <img class="cart-item__img" :src="item.imagem" :alt="item.nome" />
+      </figure>
+      <div class="cart-item__info_details">
+        <div class="cart-item__info_details_name">
+          <p class="cart-item__nome">{{ item.nome }}</p>
+          <span class="cart-item__subtotal">{{ subtotal }}</span>
+        </div>
+        <div class="cart-item__info_details_composicao">
+          <p v-if="composicaoTexto" class="cart-item__details">{{ composicaoTexto }}</p>
+        </div>
+      </div>
+    </div>
+    
       <div v-if="isCombo" class="cart-item__combo-editor">
         <div class="cart-item__combo-editor-header">
           <span>Editar sabores</span>
@@ -114,16 +120,13 @@ watch(
           <i class="pi pi-trash"></i>
         </button>
       </div>
-    </div>
+    
   </li>
 </template>
 
 <style scoped>
 .cart-item {
-  display: grid;
-  grid-template-columns: 56px 1fr auto;
-  gap: 12px;
-  align-items: start;
+  
   padding: 12px 0;
   border-bottom: 1px solid var(--gr-cream-300);
 }
@@ -133,6 +136,7 @@ watch(
   height: 56px;
   border-radius: 12px;
   object-fit: cover;
+  margin: 0; 
 }
 
 .cart-item__nome {
@@ -146,12 +150,6 @@ watch(
   color: var(--gr-cacao-600);
   margin-top: 4px;
   line-height: 1.35;
-}
-
-.cart-item__preco-unit {
-  font-size: 0.75rem;
-  color: var(--gr-cacao-600);
-  margin-top: 2px;
 }
 
 .cart-item__combo-editor {
@@ -212,10 +210,31 @@ watch(
   white-space: nowrap;
 }
 
+.cart-item__info {
+  display: flex;
+  gap: 12px;
+}
+
 .cart-item__info_details {
   display: flex;
   align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+  width: 100%;  
+}
+
+.cart-item__info_details_name {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+
+  width: 100%;  
+}
+
+.cart-item__info_details_composicao {
+  width: 100%;  
+  text-align: start;
 }
 
 :deep(.cart-item__qty-input) {

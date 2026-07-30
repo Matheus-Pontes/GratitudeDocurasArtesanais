@@ -28,7 +28,7 @@ async function enviarPedido() {
     toast.add({
       severity: 'success',
       summary: 'Pedido registrado!',
-      detail: 'Seu pedido foi enviado para a planilha e entraremos em contato em breve.',
+      detail: 'Seu pedido foi enviado e entraremos em contato em breve.',
       life: 3500
     })
 
@@ -110,13 +110,13 @@ async function enviarPedido() {
 
       <Button
         type="submit"
-        label="Enviar pedido para a planilha"
+        label="Enviar pedido"
         icon="pi pi-send"
         class="checkout-form__submit"
         :disabled="!checkout.isValido || cart.estaVazio"
       />
       <p class="checkout-form__hint">
-        Seu pedido será registrado na planilha e a equipe entrará em contato com você.
+        *Seu pedido será registrado e a equipe entrará em contato com você.
       </p>
     </form>
   </Dialog>
