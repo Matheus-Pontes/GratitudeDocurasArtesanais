@@ -33,7 +33,7 @@ onMounted(() => {
           v-for="(combo, idx) in store.items"
           :key="combo.id"
           :combo="combo"
-          :destaque="combo.id === 'combo-5'"
+          
         />
       </div>
     </div>

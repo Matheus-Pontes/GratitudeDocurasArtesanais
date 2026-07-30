@@ -26,7 +26,10 @@ function onQuantidadeChange(valor) {
   <li class="cart-item">
     <img class="cart-item__img" :src="item.imagem" :alt="item.nome" />
     <div class="cart-item__info">
-      <p class="cart-item__nome">{{ item.nome }}</p>
+      <div class="cart-item__info_details">
+        <p class="cart-item__nome">{{ item.nome }}</p>
+        <span class="cart-item__subtotal">{{ subtotal }}</span>
+      </div>
       <p class="cart-item__preco-unit">{{ precoUnitario }} / un.</p>
       <div class="cart-item__controls">
         <InputNumber
@@ -48,7 +51,7 @@ function onQuantidadeChange(valor) {
         </button>
       </div>
     </div>
-    <span class="cart-item__subtotal">{{ subtotal }}</span>
+    
   </li>
 </template>
 
@@ -107,6 +110,12 @@ function onQuantidadeChange(valor) {
   color: var(--gr-berry-700);
   font-size: 0.9rem;
   white-space: nowrap;
+}
+
+.cart-item__info_details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 :deep(.cart-item__qty-input) {

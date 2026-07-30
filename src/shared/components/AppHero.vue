@@ -8,6 +8,9 @@ function irParaCatalogo() {
 
 <template>
   <section class="app-hero">
+    <figure>
+      <img src="../../../public/images/logo.png" alt="Logo" />
+    </figure>
     <div class="gr-container app-hero__inner">
       <span class="gr-eyebrow">Feitas à mão, sabor de carinho</span>
       <h1 class="app-hero__title">Adoçando os seus <em>momentos</em></h1>
@@ -27,8 +30,31 @@ function irParaCatalogo() {
 </template>
 
 <style scoped>
+
+.gr-container {
+  margin: 0; 
+}
+
+figure {
+  margin: 0;
+}
+
+figure > img {
+  max-width: 900px;
+  width: 100%;
+}
+
+@media (width < 750px) {
+  .app-hero { 
+    flex-wrap: wrap;
+  }
+}
+
 .app-hero {
   padding: 48px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-hero__inner {

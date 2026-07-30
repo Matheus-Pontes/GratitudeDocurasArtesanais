@@ -56,7 +56,7 @@ const cart = useCartStore()
 }
 
 .app-header__brand-script {
-  font-family: var(--gr-font-script);
+  font-family: var(--gr-font-title);
   font-size: 2rem;
   font-weight: 700;
   color: var(--gr-pink-500);
@@ -72,11 +72,15 @@ const cart = useCartStore()
 
 .app-header__cart-btn {
   position: relative;
+  z-index: 1;
+  overflow: visible;
 }
 
 .app-header__cart-badge {
   position: absolute;
   top: -4px;
   right: -4px;
+  z-index: 10;
+  
 }
 </style>

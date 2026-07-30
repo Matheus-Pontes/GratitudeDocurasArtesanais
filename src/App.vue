@@ -23,3 +23,9 @@ import CheckoutDialog from '@/features/checkout/components/CheckoutDialog.vue'
   <CheckoutDialog />
   <Toast position="top-center" />
 </template>
+
+<style scoped>
+#catalogo {
+  padding: 1.25rem;
+}
+</style>

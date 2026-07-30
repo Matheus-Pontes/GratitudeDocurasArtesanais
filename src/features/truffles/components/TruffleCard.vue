@@ -62,7 +62,6 @@ function adicionarAoCarrinho() {
     <div class="truffle-card__body">
       <h3 class="truffle-card__title">{{ truffle.nome }}</h3>
       <p class="truffle-card__desc">{{ truffle.descricao }}</p>
-
       <div class="truffle-card__meta">
         <span class="truffle-card__peso">{{ truffle.peso }}</span>
         <span class="truffle-card__preco">
@@ -73,20 +72,9 @@ function adicionarAoCarrinho() {
     </div>
 
     <div class="truffle-card__footer">
-      <InputNumber
-        v-model="quantidade"
-        :min="1"
-        :max="99"
-        showButtons
-        buttonLayout="horizontal"
-        inputClass="truffle-card__qty-input"
-        decrementButtonClass="p-button-outlined"
-        incrementButtonClass="p-button-outlined"
-        aria-label="Quantidade"
-      />
       <Button
         class="truffle-card__add-btn"
-        :label="`Adicionar · ${subtotalFormatado}`"
+        :label="'Quero'"
         icon="pi pi-shopping-bag"
         @click="adicionarAoCarrinho"
       />

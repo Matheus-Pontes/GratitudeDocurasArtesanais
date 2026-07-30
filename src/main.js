@@ -13,8 +13,32 @@ import { GratitudePreset } from './shared/styles/gratitudePreset'
 import App from './App.vue'
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(createPinia())
+pinia.use(({ store }) => {
+  const storageKey = `pinia:${store.$id}`
+
+  if (typeof window === 'undefined') return
+
+  try {
+    const saved = window.localStorage.getItem(storageKey)
+    if (saved) {
+      store.$patch(JSON.parse(saved))
+    }
+  } catch (error) {
+    console.warn(`Não foi possível restaurar ${storageKey}`, error)
+  }
+
+  store.$subscribe(() => {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(store.$state))
+    } catch (error) {
+      console.warn(`Não foi possível salvar ${storageKey}`, error)
+    }
+  })
+})
+
+app.use(pinia)
 app.use(PrimeVue, {
   theme: {
     preset: GratitudePreset,
