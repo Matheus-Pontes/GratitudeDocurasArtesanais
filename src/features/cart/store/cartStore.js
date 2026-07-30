@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 /**
  * Item de carrinho:
- * { id, tipo: 'trufa' | 'combo', nome, imagem, preco, quantidade, peso? }
+ * { id, tipo: 'trufa' | 'combo', nome, imagem, preco, quantidade, peso?, composicao?, composicaoTexto? }
  */
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -37,7 +37,10 @@ export const useCartStore = defineStore('cart', {
           imagem: produto.imagem,
           preco: produto.preco,
           peso: produto.peso,
-          quantidade
+          quantidade,
+          quantidadeTotal: produto.quantidadeTotal || produto.quantidade || 0,
+          composicao: produto.composicao || [],
+          composicaoTexto: produto.composicaoTexto || ''
         })
       }
     },
@@ -50,6 +53,36 @@ export const useCartStore = defineStore('cart', {
         return
       }
       item.quantidade = quantidade
+    },
+
+    atualizarComposicao(id, composicao) {
+      const item = this.items.find((i) => i.id === id)
+      if (!item || item.tipo !== 'combo') return
+
+      const limite = Number(item.quantidadeTotal || item.quantidade || 0)
+      const entradas = (Array.isArray(composicao) ? composicao : [])
+        .map((entry) => ({
+          ...entry,
+          quantidade: Math.max(0, Number(entry.quantidade || 0))
+        }))
+
+      const totalAtual = entradas.reduce((sum, entry) => sum + Number(entry.quantidade || 0), 0)
+      if (totalAtual > limite) {
+        let restante = totalAtual - limite
+        for (let index = entradas.length - 1; index >= 0 && restante > 0; index -= 1) {
+          const reduzir = Math.min(entradas[index].quantidade, restante)
+          entradas[index].quantidade -= reduzir
+          restante -= reduzir
+        }
+      }
+
+      const composicaoTexto = entradas
+        .filter((entry) => Number(entry.quantidade || 0) > 0)
+        .map((entry) => `${entry.quantidade}x ${entry.nome}`)
+        .join(', ')
+
+      item.composicao = entradas
+      item.composicaoTexto = composicaoTexto
     },
 
     remover(id) {

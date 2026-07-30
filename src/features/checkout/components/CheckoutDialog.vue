@@ -19,23 +19,33 @@ const formasPagamento = ['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de d
 
 const totalFormatado = computed(() => formatCurrency(cart.totalPreco))
 
-function enviarPedido() {
+async function enviarPedido() {
   if (!checkout.isValido || cart.estaVazio) return
 
-  const link = checkout.montarLinkWhatsapp(cart.items, cart.totalPreco)
-  window.open(link, '_blank', 'noopener')
+  try {
+    await checkout.enviarPedido(cart.items, cart.totalPreco)
 
-  toast.add({
-    severity: 'success',
-    summary: 'Pedido enviado!',
-    detail: 'Confirme o envio no WhatsApp para finalizar.',
-    life: 3500
-  })
+    toast.add({
+      severity: 'success',
+      summary: 'Pedido registrado!',
+      detail: 'Seu pedido foi enviado para a planilha e entraremos em contato em breve.',
+      life: 3500
+    })
 
-  cart.limpar()
-  checkout.resetar()
-  checkout.fechar()
-  cart.fechar()
+    cart.limpar()
+    checkout.resetar()
+    checkout.fechar()
+    cart.fechar()
+  } catch (error) {
+    const mensagem = error instanceof Error ? error.message : 'Tente novamente em instantes.'
+
+    toast.add({
+      severity: 'error',
+      summary: 'Não foi possível registrar o pedido',
+      detail: mensagem,
+      life: 4000
+    })
+  }
 }
 </script>
 
@@ -100,13 +110,13 @@ function enviarPedido() {
 
       <Button
         type="submit"
-        label="Enviar pedido pelo WhatsApp"
-        icon="pi pi-whatsapp"
+        label="Enviar pedido para a planilha"
+        icon="pi pi-send"
         class="checkout-form__submit"
         :disabled="!checkout.isValido || cart.estaVazio"
       />
       <p class="checkout-form__hint">
-        Você será direcionado ao WhatsApp da loja com o pedido já preenchido.
+        Seu pedido será registrado na planilha e a equipe entrará em contato com você.
       </p>
     </form>
   </Dialog>

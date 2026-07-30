@@ -19,6 +19,7 @@ export const useComboStore = defineStore('combos', {
       this.error = null
       try {
         this.items = await fetchCombos()
+        console.log(this.items);
         this.status = 'success'
       } catch (err) {
         this.error = err.message || 'Não foi possível carregar os combos.'

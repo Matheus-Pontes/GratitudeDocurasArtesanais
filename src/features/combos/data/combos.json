@@ -1,13 +1,5 @@
 [
   {
-    "id": "combo-1",
-    "nome": "1 Trufa",
-    "quantidade": 1,
-    "pesoPorUnidade": "50g cada",
-    "preco": 6.00,
-    "imagem": "/images/combos/1-trufa.png"
-  },
-  {
     "id": "combo-3",
     "nome": "3 Trufas",
     "quantidade": 3,

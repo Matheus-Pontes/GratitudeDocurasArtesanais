@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { formatCurrency } from '@/shared/utils/currency'
 
-// TODO: troque pelo número real da loja no formato DDI+DDD+número (somente dígitos)
-const WHATSAPP_NUMERO = '5511999999999'
+const GOOGLE_SHEETS_ENDPOINT =
+  typeof import.meta !== 'undefined' && import.meta.env
+    ? import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL || import.meta.env.VITE_GOOGLE_SHEETS_URL || ''
+    : ''
 
 export const useCheckoutStore = defineStore('checkout', {
   state: () => ({
@@ -10,7 +12,7 @@ export const useCheckoutStore = defineStore('checkout', {
     form: {
       nome: '',
       telefone: '',
-      entrega: 'retirada', // 'retirada' | 'entrega'
+      entrega: 'retirada',
       endereco: '',
       pagamento: null,
       observacoes: ''
@@ -44,34 +46,56 @@ export const useCheckoutStore = defineStore('checkout', {
       }
     },
 
-    /**
-     * Monta a mensagem do pedido e devolve o link do WhatsApp.
-     * Não há backend nesta demo — o "envio do pedido" abre o WhatsApp
-     * da loja com o pedido já formatado, pronto para confirmação manual.
-     */
-    montarLinkWhatsapp(itens, totalPreco) {
-      const linhas = []
-      linhas.push('*Novo pedido — Gratitude Doçuras Artesanais*')
-      linhas.push('')
-      itens.forEach((item) => {
-        linhas.push(`• ${item.quantidade}x ${item.nome} — ${formatCurrency(item.preco * item.quantidade)}`)
-      })
-      linhas.push('')
-      linhas.push(`*Total: ${formatCurrency(totalPreco)}*`)
-      linhas.push('')
-      linhas.push(`*Cliente:* ${this.form.nome}`)
-      linhas.push(`*Telefone:* ${this.form.telefone}`)
-      linhas.push(`*Entrega:* ${this.form.entrega === 'entrega' ? 'Entrega' : 'Retirada no local'}`)
-      if (this.form.entrega === 'entrega') {
-        linhas.push(`*Endereço:* ${this.form.endereco}`)
+    montarPayloadPedido(itens, totalPreco) {
+      const itensFormatados = (itens || []).map((item) => ({
+        nome: item.nome,
+        tipo: item.tipo || 'produto',
+        quantidade: Number(item.quantidade || 0),
+        precoUnitario: Number(item.preco || 0),
+        precoTotal: Number(item.preco || 0) * Number(item.quantidade || 0),
+        composicaoTexto: item.composicaoTexto || '',
+        composicao: Array.isArray(item.composicao) ? item.composicao : []
+      }))
+
+      return {
+        metodo: 'google-sheets',
+        status: 'pendente',
+        criadoEm: new Date().toISOString(),
+        cliente: {
+          nome: this.form.nome.trim(),
+          telefone: this.form.telefone.trim(),
+          entrega: this.form.entrega === 'entrega' ? 'Entrega' : 'Retirada no local',
+          endereco: this.form.endereco.trim(),
+          pagamento: this.form.pagamento,
+          observacoes: this.form.observacoes.trim()
+        },
+        itens: itensFormatados,
+        totalItens: itensFormatados.reduce((sum, item) => sum + item.quantidade, 0),
+        totalPreco: Number(totalPreco || 0),
+        totalFormatado: formatCurrency(totalPreco || 0)
       }
-      linhas.push(`*Pagamento:* ${this.form.pagamento}`)
-      if (this.form.observacoes.trim()) {
-        linhas.push(`*Observações:* ${this.form.observacoes}`)
+    },
+
+    async enviarPedido(itens, totalPreco) {
+      const endpoint = GOOGLE_SHEETS_ENDPOINT
+      if (!endpoint) {
+        throw new Error('Configure VITE_GOOGLE_APPS_SCRIPT_URL para registrar o pedido na planilha.')
       }
 
-      const texto = encodeURIComponent(linhas.join('\n'))
-      return `https://wa.me/${WHATSAPP_NUMERO}?text=${texto}`
+      const payload = this.montarPayloadPedido(itens, totalPreco)
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        throw new Error(`Não foi possível registrar o pedido na planilha. Status ${response.status}.`)
+      }
+
+      return payload
     }
   }
 })

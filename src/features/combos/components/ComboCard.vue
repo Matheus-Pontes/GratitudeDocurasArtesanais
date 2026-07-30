@@ -1,8 +1,10 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Button from 'primevue/button'
+import InputNumber from 'primevue/inputnumber'
 import { useToast } from 'primevue/usetoast'
 import { useCartStore } from '@/features/cart/store/cartStore'
+import { useTruffleStore } from '@/features/truffles/store/truffleStore'
 import { formatCurrency } from '@/shared/utils/currency'
 
 const props = defineProps({
@@ -18,24 +20,102 @@ const props = defineProps({
 
 const cart = useCartStore()
 const toast = useToast()
+const truffleStore = useTruffleStore()
+
+const selecoes = ref({})
 
 const precoFormatado = computed(() => formatCurrency(props.combo.preco))
+const trufasDisponiveis = computed(() =>
+  truffleStore.items.filter((truffle) => truffle.linha === 'tradicional' && truffle.disponivelEmCombo)
+)
+const totalSelecionado = computed(() =>
+  Object.values(selecoes.value).reduce((sum, valor) => sum + Number(valor || 0), 0)
+)
+const estaCompleto = computed(() => totalSelecionado.value === props.combo.quantidade)
+const textoSelecao = computed(() => {
+  if (!trufasDisponiveis.value.length) return 'Carregando sabores...'
+
+  const restante = props.combo.quantidade - totalSelecionado.value
+  if (restante > 0) return `Faltam ${restante} trufas`
+  if (restante < 0) return `Selecione até ${props.combo.quantidade} trufas`
+  return 'Combo pronto'
+})
+
+function resetarSelecoes() {
+  selecoes.value = Object.fromEntries(
+    trufasDisponiveis.value.map((truffle) => [truffle.id, 0])
+  )
+}
+
+watch(
+  trufasDisponiveis,
+  (trufas) => {
+    if (!trufas.length) return
+
+    if (!Object.keys(selecoes.value).length) {
+      resetarSelecoes()
+      return
+    }
+
+    const proximasSelecoes = {}
+    trufas.forEach((truffle) => {
+      proximasSelecoes[truffle.id] = Number(selecoes.value[truffle.id] || 0)
+    })
+    selecoes.value = proximasSelecoes
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  if (!truffleStore.items.length) {
+    truffleStore.load()
+  }
+})
 
 function adicionarAoCarrinho() {
+  if (!estaCompleto.value) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Selecione as trufas',
+      detail: `Escolha exatamente ${props.combo.quantidade} trufas para este combo.`,
+      life: 2600
+    })
+    return
+  }
+
+  const composicao = trufasDisponiveis.value.map((truffle) => ({
+    id: truffle.id,
+    nome: truffle.nome,
+    quantidade: Number(selecoes.value[truffle.id] || 0)
+  }))
+
+  const composicaoTexto = composicao
+    .filter((item) => item.quantidade > 0)
+    .map((item) => `${item.quantidade}x ${item.nome}`)
+    .join(', ')
+  const composicaoSignature = composicao.map((item) => `${item.id}:${item.quantidade}`).join('|')
+  const itemId = `${props.combo.id}-${composicaoSignature || 'sem-selecao'}`
+
   cart.adicionar({
-    id: props.combo.id,
+    id: itemId,
     tipo: 'combo',
     nome: props.combo.nome,
     imagem: props.combo.imagem,
     preco: props.combo.preco,
-    peso: props.combo.pesoPorUnidade
+    peso: props.combo.pesoPorUnidade,
+    composicao,
+    composicaoTexto,
+    quantidadeTotal: props.combo.quantidade
   })
+
   toast.add({
     severity: 'success',
     summary: 'Combo adicionado',
-    detail: props.combo.nome,
+    detail: composicaoTexto || props.combo.nome,
     life: 2200
   })
+
+  resetarSelecoes()
 }
 </script>
 
@@ -49,11 +129,32 @@ function adicionarAoCarrinho() {
       <h3 class="combo-card__title">{{ combo.nome }}</h3>
       <p class="combo-card__peso"><i class="pi pi-heart-fill"></i> {{ combo.pesoPorUnidade }}</p>
       <p class="combo-card__preco">{{ precoFormatado }}</p>
+
+      <div v-if="trufasDisponiveis.length" class="combo-card__selectors">
+        <div class="combo-card__selector-head">
+          <span>Monte seu combo</span>
+          <strong>{{ textoSelecao }}</strong>
+        </div>
+
+        <div v-for="truffle in trufasDisponiveis" :key="truffle.id" class="combo-card__selector">
+          <span class="combo-card__selector-name">{{ truffle.nome }}</span>
+          <InputNumber
+            v-model="selecoes[truffle.id]"
+            :min="0"
+            :max="combo.quantidade"
+            showButtons
+            buttonLayout="horizontal"
+            inputClass="combo-card__qty-input"
+          />
+        </div>
+      </div>
     </div>
+
     <Button
       class="combo-card__btn"
-      label="Adicionar"
+      :label="trufasDisponiveis.length ? (estaCompleto ? 'Adicionar' : 'Selecione as trufas') : 'Carregando...'"
       icon="pi pi-shopping-bag"
+      :disabled="trufasDisponiveis.length > 0 && !estaCompleto"
       @click="adicionarAoCarrinho"
     />
   </article>
@@ -111,6 +212,12 @@ function adicionarAoCarrinho() {
   object-fit: cover;
 }
 
+.combo-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .combo-card__title {
   font-size: 1.1rem;
 }
@@ -133,8 +240,49 @@ function adicionarAoCarrinho() {
   color: var(--gr-berry-700);
 }
 
+.combo-card__selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--gr-cream-300);
+  border-radius: var(--gr-radius-sm);
+  background: var(--gr-cream-100);
+}
+
+.combo-card__selector-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--gr-cacao-600);
+}
+
+.combo-card__selector-head strong {
+  color: var(--gr-berry-700);
+}
+
+.combo-card__selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.combo-card__selector-name {
+  text-align: left;
+  flex: 1;
+}
+
 .combo-card__btn {
   width: 100%;
   justify-content: center;
+}
+
+:deep(.combo-card__qty-input) {
+  width: 56px;
+  text-align: center;
 }
 </style>
