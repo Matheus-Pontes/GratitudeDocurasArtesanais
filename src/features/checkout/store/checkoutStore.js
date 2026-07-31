@@ -13,17 +13,21 @@ export const useCheckoutStore = defineStore('checkout', {
       nome: '',
       telefone: '',
       entrega: 'retirada',
-      endereco: '',
       pagamento: null,
+      cep: '',
+      rua: '',
+      numero: '',
+      complemento: '',
       observacoes: ''
     }
   }),
 
   getters: {
     isValido: (state) => {
-      const { nome, telefone, entrega, endereco, pagamento } = state.form
+      const { nome, telefone, entrega, pagamento, cep, numero, rua  } = state.form
+      console.log(!nome.trim() || !telefone.trim() || !pagamento);
       if (!nome.trim() || !telefone.trim() || !pagamento) return false
-      if (entrega === 'entrega' && !endereco.trim()) return false
+      if (entrega === 'entrega' && !cep.trim(), !numero.trim(), !rua.trim()) return false
       return true
     }
   },
@@ -79,10 +83,13 @@ export const useCheckoutStore = defineStore('checkout', {
     async enviarPedido(itens, totalPreco) {
       const endpoint = GOOGLE_SHEETS_ENDPOINT
       if (!endpoint) {
-        throw new Error('Configure VITE_GOOGLE_APPS_SCRIPT_URL para registrar o pedido na planilha.')
+        throw new Error('Configure GOOGLE_SHEETS_ENDPOINT para registrar o pedido na planilha.')
       }
 
       const payload = this.montarPayloadPedido(itens, totalPreco)
+      console.log(payload);
+      return;
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {

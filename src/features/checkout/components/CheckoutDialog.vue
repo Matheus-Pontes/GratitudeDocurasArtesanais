@@ -85,7 +85,26 @@ async function enviarPedido() {
 
       <div v-if="checkout.form.entrega === 'entrega'" class="checkout-form__field">
         <label for="endereco">Endereço de entrega</label>
-        <Textarea id="endereco" v-model="checkout.form.endereco" rows="2" autoResize />
+
+        <div>
+          <label for="cep">CEP</label>
+          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep"/>
+        </div>
+
+        <div>
+          <label for="rua">Rua</label>
+          <InputText id="rua" class="checkout-form_w-full" v-model="checkout.form.rua" disabled/>
+        </div>
+
+        <div>
+          <label for="numero">Número</label>
+          <InputText id="numero" class="checkout-form_w-full" v-model="checkout.form.numero"/>
+        </div>
+
+        <div>
+          <label for="complemento">Complemento</label>
+          <Textarea id="complemento" class="checkout-form_w-full" v-model="checkout.form.complemento" rows="2" autoResize />
+        </div>
       </div>
 
       <div class="checkout-form__field">
@@ -103,6 +122,7 @@ async function enviarPedido() {
         <Textarea id="obs" v-model="checkout.form.observacoes" rows="2" autoResize placeholder="Ex: sem embalagem para presente" />
       </div>
 
+      
       <div class="checkout-form__total">
         <span>Total do pedido</span>
         <strong>{{ totalFormatado }}</strong>
@@ -113,11 +133,12 @@ async function enviarPedido() {
         label="Enviar pedido"
         icon="pi pi-send"
         class="checkout-form__submit"
-        :disabled="!checkout.isValido || cart.estaVazio"
+        
       />
       <p class="checkout-form__hint">
         *Seu pedido será registrado e a equipe entrará em contato com você.
       </p>
+      
     </form>
   </Dialog>
 </template>
@@ -180,4 +201,9 @@ async function enviarPedido() {
   color: var(--gr-cacao-600);
   text-align: center;
 }
+
+.checkout-form_w-full {
+  width: 100%;
+}
+
 </style>
