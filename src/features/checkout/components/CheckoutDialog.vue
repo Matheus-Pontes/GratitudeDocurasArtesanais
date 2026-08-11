@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
@@ -19,11 +19,46 @@ const formasPagamento = ['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de d
 
 const totalFormatado = computed(() => formatCurrency(cart.totalPreco))
 
+const enviandoPedido = ref(false)
+const iconPedido = ref('pi pi-send')
+
+watch(
+  enviandoPedido,
+  (newValue) => {
+    if (newValue) {
+      iconPedido.value = 'pi pi-spin pi-spinner'
+    } else {
+      iconPedido.value = 'pi pi-send'
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  () => checkout.form.entrega,
+  (newValue) => {
+    if (newValue === "retirada") {
+      checkout.cleanAddress();
+    }
+  },
+  { immediate: true }
+);
+
+
+
 async function enviarPedido() {
-  // if (!checkout.isValido || cart.estaVazio) return
+  if (!checkout.isValido || cart.estaVazio) {
+    return  toast.add({
+      severity: 'error',
+      summary: 'Preencha os campos obrigatórios !!!',
+      life: 4000
+    });
+  }
 
   try {
+    enviandoPedido.value = true;
     await checkout.enviarPedido(cart.items, cart.totalPreco)
+    enviandoPedido.value = false;
 
     toast.add({
       severity: 'success',
@@ -36,6 +71,7 @@ async function enviarPedido() {
     checkout.resetar()
     checkout.fechar()
     cart.fechar()
+
   } catch (error) {
     const mensagem = error instanceof Error ? error.message : 'Tente novamente em instantes.'
 
@@ -57,15 +93,17 @@ async function enviarPedido() {
     header="Finalizar pedido"
     :style="{ width: '480px' }"
     :breakpoints="{ '600px': '94vw' }"
+    :closable="!enviandoPedido"
+    :dismissableMask="!enviandoPedido"
   >
     <form class="checkout-form" @submit.prevent="enviarPedido">
       <div class="checkout-form__field">
-        <label for="nome">Nome completo</label>
+        <label for="nome">Nome completo <span class="required">*</span></label>
         <InputText id="nome" v-model="checkout.form.nome" placeholder="Como podemos te chamar?" />
       </div>
 
       <div class="checkout-form__field">
-        <label for="telefone">Telefone / WhatsApp</label>
+        <label for="telefone">Telefone / WhatsApp <span class="required">*</span></label>
         <InputText id="telefone" v-model="checkout.form.telefone" placeholder="(11) 91234-5678" />
       </div>
 
@@ -87,17 +125,22 @@ async function enviarPedido() {
         <label for="endereco">Endereço de entrega</label>
 
         <div>
-          <label for="cep">CEP</label>
-          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep"/>
+          <label for="cep">CEP <span class="required">*</span></label>
+          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" v-on:blur="checkout.buscarCep"/>
+        </div>
+
+        <div>
+          <label for="cep">Estado</label>
+          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.estado" disabled/>
         </div>
 
         <div>
           <label for="rua">Rua</label>
-          <InputText id="rua" class="checkout-form_w-full" v-model="checkout.form.rua" disabled/>
+          <InputText id="rua" class="checkout-form_w-full" v-model="checkout.form.rua"/>
         </div>
 
         <div>
-          <label for="numero">Número</label>
+          <label for="numero">Número <span class="required">*</span></label>
           <InputText id="numero" class="checkout-form_w-full" v-model="checkout.form.numero"/>
         </div>
 
@@ -108,7 +151,7 @@ async function enviarPedido() {
       </div>
 
       <div class="checkout-form__field">
-        <label for="pagamento">Forma de pagamento</label>
+        <label for="pagamento">Forma de pagamento <span class="required">*</span></label>
         <Select
           id="pagamento"
           v-model="checkout.form.pagamento"
@@ -131,9 +174,8 @@ async function enviarPedido() {
       <Button
         type="submit"
         label="Enviar pedido"
-        icon="pi pi-send"
+        :icon=iconPedido
         class="checkout-form__submit"
-        
       />
       <p class="checkout-form__hint">
         *Seu pedido será registrado e a equipe entrará em contato com você.
@@ -204,6 +246,10 @@ async function enviarPedido() {
 
 .checkout-form_w-full {
   width: 100%;
+}
+
+label .required {
+  color: red;
 }
 
 </style>

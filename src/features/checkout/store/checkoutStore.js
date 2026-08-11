@@ -15,6 +15,7 @@ export const useCheckoutStore = defineStore('checkout', {
       entrega: 'retirada',
       pagamento: null,
       cep: '',
+      estado: '',
       rua: '',
       numero: '',
       complemento: '',
@@ -24,10 +25,10 @@ export const useCheckoutStore = defineStore('checkout', {
 
   getters: {
     isValido: (state) => {
-      const { nome, telefone, entrega, pagamento, cep, numero, rua  } = state.form
-    
-      // if (!nome.trim() || !telefone.trim() || !pagamento) return false
-      // if (entrega === 'entrega' && !cep.trim(), !numero.trim(), !rua.trim()) return false
+      const { nome, telefone, entrega, pagamento, cep, numero, rua  } = state.form;
+      
+      if (!nome.trim() || !telefone.trim() || !pagamento) return false
+      if (entrega === 'entrega' && !cep.trim() && !numero.trim()) return false
       return true
     }
   },
@@ -56,11 +57,8 @@ export const useCheckoutStore = defineStore('checkout', {
         if (item.tipo == 'combo')
           return `${item.tipo.toUpperCase()} - ${item.composicaoTexto || ''}`
 
-        return `${item.tipo.toUpperCase()} - ${item.nome} ${Number(item.quantidade || 0)}x ${item.composicaoTexto || ''}`
-      })
-
-      console.log(itensFormatados);
-      return;
+        return `${item.tipo.toUpperCase()} - ${Number(item.quantidade || 0)}x ${item.nome}`
+      });
 
       return {
         nome: this.form.nome.trim(),
@@ -71,35 +69,47 @@ export const useCheckoutStore = defineStore('checkout', {
         numero: this.form?.numero?.trim() == "" ? "-" : this.form.numero,
         complemento: this.form?.complemento?.trim() == "" ? "-" : this.form.complemento,
         pagamento: this.form.pagamento,
-        observacoes: this.form.observacoes.trim(),
         itens: itensFormatados.join('\n'),
-        totalFormatado: formatCurrency(totalPreco || 0)
+        totalFormatado: formatCurrency(totalPreco || 0),
+        observacoes: this.form.observacoes.trim() == "" ? "-" : this.form.observacoes,
       }
     },
 
     async enviarPedido(itens, totalPreco) {
-      const endpoint = GOOGLE_SHEETS_ENDPOINT
-      if (!endpoint) {
-        throw new Error('Configure GOOGLE_SHEETS_ENDPOINT para registrar o pedido na planilha.')
-      }
+      const payload = this.montarPayloadPedido(itens, totalPreco);
 
-      const payload = this.montarPayloadPedido(itens, totalPreco)
-
-      return;
-      
-      const response = await fetch(endpoint, {
+      const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8'
         },
         body: JSON.stringify(payload)
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`Não foi possível registrar o pedido na planilha. Status ${response.status}.`)
+        throw new Error("Não foi possível registrar seu pedido");
       }
 
       return payload
+    },
+
+    async buscarCep() {
+      if (this.form.cep.length > 0 && this.form.rua.length > 0) 
+        return;
+
+      const response = await fetch(`https://viacep.com.br/ws/${this.form.cep.trim()}/json/`);
+      await response.json().then(data => {
+        this.form.rua = data.logradouro;
+        this.form.estado = `${data.estado} - ${data.uf}`;
+      });
+    },
+
+    cleanAddress() {
+      this.form.cep = "";
+      this.form.estado = "";
+      this.form.rua = "";
+      this.form.numero = "";
+      this.form.complemento = "";
     }
   }
 })
