@@ -25,9 +25,9 @@ export const useCheckoutStore = defineStore('checkout', {
   getters: {
     isValido: (state) => {
       const { nome, telefone, entrega, pagamento, cep, numero, rua  } = state.form
-      console.log(!nome.trim() || !telefone.trim() || !pagamento);
-      if (!nome.trim() || !telefone.trim() || !pagamento) return false
-      if (entrega === 'entrega' && !cep.trim(), !numero.trim(), !rua.trim()) return false
+    
+      // if (!nome.trim() || !telefone.trim() || !pagamento) return false
+      // if (entrega === 'entrega' && !cep.trim(), !numero.trim(), !rua.trim()) return false
       return true
     }
   },
@@ -51,31 +51,28 @@ export const useCheckoutStore = defineStore('checkout', {
     },
 
     montarPayloadPedido(itens, totalPreco) {
-      const itensFormatados = (itens || []).map((item) => ({
-        nome: item.nome,
-        tipo: item.tipo || 'produto',
-        quantidade: Number(item.quantidade || 0),
-        precoUnitario: Number(item.preco || 0),
-        precoTotal: Number(item.preco || 0) * Number(item.quantidade || 0),
-        composicaoTexto: item.composicaoTexto || '',
-        composicao: Array.isArray(item.composicao) ? item.composicao : []
-      }))
+      const itensFormatados = (itens || []).map((item) => {
+        
+        if (item.tipo == 'combo')
+          return `${item.tipo.toUpperCase()} - ${item.composicaoTexto || ''}`
+
+        return `${item.tipo.toUpperCase()} - ${item.nome} ${Number(item.quantidade || 0)}x ${item.composicaoTexto || ''}`
+      })
+
+      console.log(itensFormatados);
+      return;
 
       return {
-        metodo: 'google-sheets',
-        status: 'pendente',
-        criadoEm: new Date().toISOString(),
-        cliente: {
-          nome: this.form.nome.trim(),
-          telefone: this.form.telefone.trim(),
-          entrega: this.form.entrega === 'entrega' ? 'Entrega' : 'Retirada no local',
-          endereco: this.form.endereco.trim(),
-          pagamento: this.form.pagamento,
-          observacoes: this.form.observacoes.trim()
-        },
-        itens: itensFormatados,
-        totalItens: itensFormatados.reduce((sum, item) => sum + item.quantidade, 0),
-        totalPreco: Number(totalPreco || 0),
+        nome: this.form.nome.trim(),
+        telefone: this.form.telefone.trim(),
+        entrega: this.form.entrega === 'entrega' ? 'Entrega' : 'Retirada no local',
+        cep: this.form?.cep?.trim() == "" ? "-" : this.form.cep,
+        rua: this.form?.rua?.trim() == "" ? "-" : this.form.rua,
+        numero: this.form?.numero?.trim() == "" ? "-" : this.form.numero,
+        complemento: this.form?.complemento?.trim() == "" ? "-" : this.form.complemento,
+        pagamento: this.form.pagamento,
+        observacoes: this.form.observacoes.trim(),
+        itens: itensFormatados.join('\n'),
         totalFormatado: formatCurrency(totalPreco || 0)
       }
     },
@@ -87,13 +84,13 @@ export const useCheckoutStore = defineStore('checkout', {
       }
 
       const payload = this.montarPayloadPedido(itens, totalPreco)
-      console.log(payload);
-      return;
 
+      return;
+      
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain;charset=utf-8'
         },
         body: JSON.stringify(payload)
       })

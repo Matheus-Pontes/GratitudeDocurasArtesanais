@@ -20,7 +20,7 @@ const formasPagamento = ['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de d
 const totalFormatado = computed(() => formatCurrency(cart.totalPreco))
 
 async function enviarPedido() {
-  if (!checkout.isValido || cart.estaVazio) return
+  // if (!checkout.isValido || cart.estaVazio) return
 
   try {
     await checkout.enviarPedido(cart.items, cart.totalPreco)
