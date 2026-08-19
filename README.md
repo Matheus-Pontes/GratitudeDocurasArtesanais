@@ -32,3 +32,7 @@ src/
     layouts/    → MainLayout
     styles/     → tokens de cor/tipografia + preset do PrimeVue
 ```
+
+## Features
+- [] Implementar mascara de telefone
+- [] Implementar mascara de cep 

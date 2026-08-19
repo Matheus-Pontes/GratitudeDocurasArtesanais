@@ -16,6 +16,7 @@ const highlights = [
         </li>
       </ul>
       <p class="app-footer__thanks">Obrigado por fazer parte dos nossos momentos doces! 💕</p>
+      <p class="app-footer__copy">&copy; Copyright - Gratitude Doçuras Artesanais - 2026</p>
     </div>
   </footer>
 </template>
@@ -64,5 +65,11 @@ const highlights = [
 .app-footer__thanks {
   font-family: var(--gr-font-script);
   font-size: 1.4rem;
+}
+
+.app-footer__copy {
+  font-family: var(--gr-font-body);
+  color: rgb(200, 196, 196) !important;
+  font-size: .65rem;
 }
 </style>

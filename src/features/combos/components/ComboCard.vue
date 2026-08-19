@@ -47,6 +47,15 @@ function resetarSelecoes() {
   )
 }
 
+function maxPorEntrada(entry) {
+  const totalSemEntrada = composicao.value.reduce((sum, item) => {
+    if (item.id === entry.id) return sum
+    return sum + Number(item.quantidade || 0)
+  }, 0)
+
+  return Math.max(0, limiteComposicao.value - totalSemEntrada)
+}
+
 watch(
   trufasDisponiveis,
   (trufas) => {

@@ -10,6 +10,7 @@ import { useToast } from 'primevue/usetoast'
 import { useCartStore } from '@/features/cart/store/cartStore'
 import { useCheckoutStore } from '../store/checkoutStore'
 import { formatCurrency } from '@/shared/utils/currency'
+import { mascaraCep, mascaraTelefone } from '../../../shared/utils/masks'
 
 const cart = useCartStore()
 const checkout = useCheckoutStore()
@@ -99,23 +100,23 @@ async function enviarPedido() {
     <form class="checkout-form" @submit.prevent="enviarPedido">
       <div class="checkout-form__field">
         <label for="nome">Nome completo <span class="required">*</span></label>
-        <InputText id="nome" v-model="checkout.form.nome" placeholder="Como podemos te chamar?" />
+        <InputText id="nome" v-model="checkout.form.nome" placeholder="Como podemos te chamar?" :disabled="enviandoPedido" />
       </div>
 
       <div class="checkout-form__field">
         <label for="telefone">Telefone / WhatsApp <span class="required">*</span></label>
-        <InputText id="telefone" v-model="checkout.form.telefone" placeholder="(11) 91234-5678" />
+        <InputText id="telefone" v-model="checkout.form.telefone" maxlength="15" @input="checkout.form.telefone = mascaraTelefone(checkout.form.telefone)" placeholder="(11) 91234-5678" :disabled="enviandoPedido" />
       </div>
 
       <div class="checkout-form__field">
         <span class="checkout-form__label">Como prefere receber?</span>
         <div class="checkout-form__radios">
           <label class="checkout-form__radio">
-            <RadioButton v-model="checkout.form.entrega" value="retirada" name="entrega" />
+            <RadioButton v-model="checkout.form.entrega" value="retirada" name="entrega" :disabled="enviandoPedido" />
             Retirar no local
           </label>
           <label class="checkout-form__radio">
-            <RadioButton v-model="checkout.form.entrega" value="entrega" name="entrega" />
+            <RadioButton v-model="checkout.form.entrega" value="entrega" name="entrega" :disabled="enviandoPedido" />
             Entrega
           </label>
         </div>
@@ -126,7 +127,7 @@ async function enviarPedido() {
 
         <div>
           <label for="cep">CEP <span class="required">*</span></label>
-          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" v-on:blur="checkout.buscarCep"/>
+          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" v-on:change="mascaraCep" v-on:blur="checkout.buscarCep" :disabled="enviandoPedido"/>
         </div>
 
         <div>
@@ -136,17 +137,17 @@ async function enviarPedido() {
 
         <div>
           <label for="rua">Rua</label>
-          <InputText id="rua" class="checkout-form_w-full" v-model="checkout.form.rua"/>
+          <InputText id="rua" class="checkout-form_w-full" v-model="checkout.form.rua" :disabled="enviandoPedido"/>
         </div>
 
         <div>
           <label for="numero">Número <span class="required">*</span></label>
-          <InputText id="numero" class="checkout-form_w-full" v-model="checkout.form.numero"/>
+          <InputText id="numero" class="checkout-form_w-full" v-model="checkout.form.numero" :disabled="enviandoPedido" />
         </div>
 
         <div>
           <label for="complemento">Complemento</label>
-          <Textarea id="complemento" class="checkout-form_w-full" v-model="checkout.form.complemento" rows="2" autoResize />
+          <Textarea id="complemento" class="checkout-form_w-full" v-model="checkout.form.complemento" rows="2" autoResize :disabled="enviandoPedido" />
         </div>
       </div>
 
@@ -157,12 +158,13 @@ async function enviarPedido() {
           v-model="checkout.form.pagamento"
           :options="formasPagamento"
           placeholder="Selecione"
+          :disabled="enviandoPedido"
         />
       </div>
 
       <div class="checkout-form__field">
         <label for="obs">Observações (opcional)</label>
-        <Textarea id="obs" v-model="checkout.form.observacoes" rows="2" autoResize placeholder="Ex: sem embalagem para presente" />
+        <Textarea id="obs" v-model="checkout.form.observacoes" rows="2" autoResize placeholder="Ex: sem embalagem para presente" :disabled="enviandoPedido" />
       </div>
 
       
@@ -176,6 +178,7 @@ async function enviarPedido() {
         label="Enviar pedido"
         :icon=iconPedido
         class="checkout-form__submit"
+        :disabled="enviandoPedido"
       />
       <p class="checkout-form__hint">
         *Seu pedido será registrado e a equipe entrará em contato com você.

@@ -28,7 +28,7 @@ export const useCheckoutStore = defineStore('checkout', {
       const { nome, telefone, entrega, pagamento, cep, numero, rua  } = state.form;
       
       if (!nome.trim() || !telefone.trim() || !pagamento) return false
-      if (entrega === 'entrega' && !cep.trim() && !numero.trim()) return false
+      if (entrega === 'entrega' && !cep.trim() && !numero.trim() && telefone.length == 15) return false
       return true
     }
   },
