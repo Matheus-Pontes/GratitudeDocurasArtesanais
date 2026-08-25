@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
 import { formatCurrency } from '@/shared/utils/currency'
+import { buscarEndereco, distanciaOSRM } from '@/shared/utils/calculatorFrete'
+
+const LOJAS = [
+  { nome: 'Loja 1', cep: '08120260' },
+  { nome: 'Loja 2', cep: '08270280' },
+];
 
 const GOOGLE_SHEETS_ENDPOINT =
   typeof import.meta !== 'undefined' && import.meta.env
@@ -110,6 +116,35 @@ export const useCheckoutStore = defineStore('checkout', {
       this.form.rua = "";
       this.form.numero = "";
       this.form.complemento = "";
+    },
+
+    async calcularFrete() {
+      try {
+        let resultado = 0;
+        const enderecoCliente = await buscarEndereco(this.form.cep);
+        const coordCliente = { lat: enderecoCliente.lat, lon: enderecoCliente.lon };
+
+        const distancias = [];
+        for (const loja of LOJAS) {
+          const enderecoLoja = await buscarEndereco(loja.cep);
+          const coordLoja = { lat: enderecoLoja.lat, lon: enderecoLoja.lon };
+          const distKm = await distanciaOSRM(coordLoja, coordCliente);
+          distancias.push({ loja: loja.nome, distKm });
+        }
+
+        const maisProxima = distancias.reduce((menor, atual) =>
+          atual.distKm < menor.distKm ? atual : menor
+        );
+
+        if (maisProxima.distKm <= 15) 
+          resultado = maisProxima.distKm * 0.8;
+        
+        return resultado;
+      }
+      catch(e) {
+        console.log(e);
+        return 0;
+      }
     }
   }
 })

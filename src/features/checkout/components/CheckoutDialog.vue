@@ -20,6 +20,26 @@ const formasPagamento = ['Pix', 'Dinheiro', 'Cartão de crédito', 'Cartão de d
 
 const totalFormatado = computed(() => formatCurrency(cart.totalPreco))
 
+const frete = ref(0)
+
+const totalFrete = computed(() => formatCurrency(frete.value))
+
+const totalComFrete = computed(() =>
+  formatCurrency(frete.value + cart.totalPreco)
+)
+
+watch(
+  () => [checkout.form.cep, checkout.form.entrega],
+  async ([cep, entrega]) => {
+    if (entrega !== 'entrega') {
+      frete.value = 0
+      return
+    }
+
+    frete.value = Math.round(await checkout.calcularFrete())
+  },
+  { immediate: true }
+)
 const enviandoPedido = ref(false)
 const iconPedido = ref('pi pi-send')
 
@@ -169,8 +189,23 @@ async function enviarPedido() {
 
       
       <div class="checkout-form__total">
-        <span>Total do pedido</span>
-        <strong>{{ totalFormatado }}</strong>
+        <div>
+          <span>Total do pedido</span>
+          <strong>{{ totalFormatado }}</strong>
+        </div>
+
+        <div v-if="checkout.form.entrega === 'entrega'" class="checkout-form__frete">
+          <span>Frete</span>
+          <strong>{{ totalFrete }}</strong>
+        </div>
+
+      </div>
+
+      <div class="checkout-form__total" v-if="checkout.form.entrega === 'entrega'">
+        <div>
+          <span>Total</span>
+          <strong>{{ totalComFrete }}</strong>
+        </div>
       </div>
 
       <Button
@@ -222,12 +257,20 @@ async function enviarPedido() {
 }
 
 .checkout-form__total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 12px 0;
   border-top: 1px dashed var(--gr-cream-300);
   font-size: 1rem;
+}
+
+.checkout-form__frete, .checkout-form__frete > strong { 
+  font-size: 1rem !important;
+}
+
+.checkout-form__total  div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
 }
 
 .checkout-form__total strong {

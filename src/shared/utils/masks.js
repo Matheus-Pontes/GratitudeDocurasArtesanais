@@ -13,9 +13,12 @@ export function mascaraTelefone(valor) {
 }
 
 export function mascaraCep(valor) {
-  valor = valor.replace(/\D/g, '');
-
-  return valor
-    .replace(/^(\d{5})(\d)/, '$1-$2')
-    .slice(0, 9);
+  if(valor) {
+      valor = valor.replace(/\D/g, '');
+    
+      return valor
+        .replace(/^(\d{5})(\d)/, '$1-$2')
+        .slice(0, 9);
+  }
+  return '';
 }
