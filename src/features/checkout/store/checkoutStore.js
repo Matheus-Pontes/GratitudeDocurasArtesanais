@@ -119,6 +119,9 @@ export const useCheckoutStore = defineStore('checkout', {
     },
 
     async calcularFrete() {
+      if(this.form.cep.length == 0)
+        return;
+
       try {
         let resultado = 0;
         const enderecoCliente = await buscarEndereco(this.form.cep);
@@ -142,7 +145,6 @@ export const useCheckoutStore = defineStore('checkout', {
         return resultado;
       }
       catch(e) {
-        console.log(e);
         return 0;
       }
     }

@@ -24,9 +24,9 @@ const frete = ref(0)
 
 const totalFrete = computed(() => formatCurrency(frete.value))
 
-const totalComFrete = computed(() =>
-  formatCurrency(frete.value + cart.totalPreco)
-)
+const totalComFrete = computed(() => formatCurrency(frete.value + cart.totalPreco))
+
+const showFrete = computed(() => checkout.form.entrega === 'entrega' && frete.value > 0);
 
 watch(
   () => [checkout.form.cep, checkout.form.entrega],
@@ -37,6 +37,20 @@ watch(
     }
 
     frete.value = Math.round(await checkout.calcularFrete())
+
+    if (frete.value == 0 && cep.length > 0) {
+      toast.add({
+        severity: 'info',
+        summary: 'Distância muito longa',
+        detail: `Seu endereço está fora de nosso raio de entrega. 
+                \n Vamos trocar para retirada. 
+                \n Escolha um dos locais de preferência. 
+                \n Gratitude 🍬`,
+        life: 5000
+      });
+
+      checkout.form.entrega = "retirada";
+    }
   },
   { immediate: true }
 )
@@ -84,7 +98,7 @@ async function enviarPedido() {
     toast.add({
       severity: 'success',
       summary: 'Pedido registrado!',
-      detail: 'Seu pedido foi enviado e entraremos em contato em breve.',
+      detail: 'Seu pedido foi enviado e entraremos em contato em breve. \n Gratitude 🍬',
       life: 3500
     })
 
@@ -147,7 +161,7 @@ async function enviarPedido() {
 
         <div>
           <label for="cep">CEP <span class="required">*</span></label>
-          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" v-on:change="mascaraCep" v-on:blur="checkout.buscarCep" :disabled="enviandoPedido"/>
+          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" @input="checkout.form.cep = mascaraCep($event.target.value)" @blur="checkout.buscarCep" :disabled="enviandoPedido"/>
         </div>
 
         <div>
@@ -194,14 +208,13 @@ async function enviarPedido() {
           <strong>{{ totalFormatado }}</strong>
         </div>
 
-        <div v-if="checkout.form.entrega === 'entrega'" class="checkout-form__frete">
+        <div v-if="showFrete" class="checkout-form__frete">
           <span>Frete</span>
           <strong>{{ totalFrete }}</strong>
         </div>
-
       </div>
 
-      <div class="checkout-form__total" v-if="checkout.form.entrega === 'entrega'">
+      <div class="checkout-form__total" v-if="showFrete">
         <div>
           <span>Total</span>
           <strong>{{ totalComFrete }}</strong>
