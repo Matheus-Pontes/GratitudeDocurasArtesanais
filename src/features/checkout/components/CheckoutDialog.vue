@@ -194,6 +194,18 @@ async function enviarPedido() {
           placeholder="Selecione"
           :disabled="enviandoPedido"
         />
+
+        <div class="checkout-form__field" v-if="checkout.form.pagamento == 'Dinheiro'">
+          <label for="troco">Troco para quanto ? <span class="required">*</span></label>
+          <Textarea id="troco" v-model="checkout.form.troco" 
+                    rows="2" autoResize 
+                    placeholder="Ex: troco para 50" :disabled="enviandoPedido" />
+        </div>
+
+        <div class="checkout-form__field" v-if="checkout.form.pagamento == 'Cartão de crédito' || checkout.form.pagamento == 'Cartão de débito'">
+          Campos com dados do cartão.
+        </div>
+
       </div>
 
       <div class="checkout-form__field">

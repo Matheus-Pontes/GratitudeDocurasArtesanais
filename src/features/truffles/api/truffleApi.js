@@ -15,6 +15,7 @@ function delay(ms) {
 export async function fetchTruffles() {
   await delay(NETWORK_DELAY_MS)
   // clona os dados para simular uma resposta de rede isolada do módulo local
+  console.log(truffleData)
   return structuredClone(truffleData)
 }
 

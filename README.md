@@ -36,5 +36,5 @@ src/
 ## Features
 - [x] Implementar mascara de telefone
 - [x] Implementar mascara de cep
-- [ ] ajustar mensagem do frete caso for maior que 15 km 
-- [ ] ver questão do modal de finalizar pedidos para remover dados dos campos
+- [x] ajustar mensagem do frete caso for maior que 15 km 
+- [x] ver questão do modal de finalizar pedidos para remover dados dos campos

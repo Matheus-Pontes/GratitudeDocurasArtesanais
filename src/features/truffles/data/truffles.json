@@ -2,7 +2,7 @@
   {
     "id": "premium-ninho-nutella",
     "nome": "Ninho com Nutella",
-    "descricao": "Trufa de leite Ninho recheada com Nutella cremosa.",
+    "descricao": "Trufa crocante de chocolate meio amargo, recheada com leite Ninho e Nutella cremosa.",
     "linha": "premium",
     "preco": 8.50,
     "unidade": "a unidade",
@@ -24,12 +24,23 @@
   {
     "id": "premium-pacoca",
     "nome": "Paçoca",
-    "descricao": "Chocolate ao leite recheado com paçoca crocante.",
+    "descricao": "Chocolate meio amargo recheado com paçoca crocante.",
     "linha": "premium",
     "preco": 8.50,
     "unidade": "a unidade",
     "peso": "50g",
     "imagem": "/images/premium/pacoca.png",
+    "disponivelEmCombo": false
+  },
+  {
+    "id": "premium-kinder-bueno",
+    "nome": "Kinder bueno",
+    "descricao": "Trufa recheada com creme de kinder bueno",
+    "linha": "premium",
+    "preco": 8.50,
+    "unidade": "a unidade",
+    "peso": "50g",
+    "imagem": "/images/premium/kinder-bueno.png",
     "disponivelEmCombo": false
   },
   {
@@ -46,7 +57,7 @@
   {
     "id": "trad-brigadeiro",
     "nome": "Brigadeiro",
-    "descricao": "Clássico brigadeiro com granulado, intenso e delicioso.",
+    "descricao": "Clássico brigadeiro, intenso e delicioso.",
     "linha": "tradicional",
     "preco": 6.00,
     "unidade": "a unidade",
@@ -68,7 +79,7 @@
   {
     "id": "trad-morango",
     "nome": "Morango",
-    "descricao": "Trufa de morango cremosa com pedacinhos de fruta.",
+    "descricao": "Trufa de morango cremosa e sabor da fruta.",
     "linha": "tradicional",
     "preco": 6.00,
     "unidade": "a unidade",

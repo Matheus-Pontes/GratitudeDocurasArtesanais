@@ -91,6 +91,19 @@ export const useCartStore = defineStore('cart', {
 
     limpar() {
       this.items = []
+    },
+    quantidadeDeTrufasComboEstaCerta() {
+      let podeAbrirCheckout = true;
+
+      this.items.forEach(i => {
+       if (i.tipo == "combo") {
+         let somaQuantidadeTrufasCombo = i.composicao.reduce((sum, i) => sum + i.quantidade, 0);
+         if (somaQuantidadeTrufasCombo < i.quantidadeTotal)
+           podeAbrirCheckout = false;
+       }
+      });
+
+      return podeAbrirCheckout;
     }
   }
 })

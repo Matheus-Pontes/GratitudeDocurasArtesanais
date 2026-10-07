@@ -11,6 +11,7 @@ const cart = useCartStore()
 const checkout = useCheckoutStore()
 
 const totalFormatado = computed(() => formatCurrency(cart.totalPreco))
+const quantidadeDeTrufasComboEstaCerta = computed(() => cart.quantidadeDeTrufasComboEstaCerta());
 
 function irParaCheckout() {
   checkout.abrir()
@@ -46,6 +47,7 @@ function irParaCheckout() {
           icon="pi pi-arrow-right"
           iconPos="right"
           class="cart-drawer__checkout-btn"
+          :disabled="!quantidadeDeTrufasComboEstaCerta"
           @click="irParaCheckout"
         />
         <Button

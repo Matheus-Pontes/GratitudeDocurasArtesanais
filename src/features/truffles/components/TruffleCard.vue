@@ -92,6 +92,7 @@ function adicionarAoCarrinho() {
   box-shadow: var(--gr-shadow-card);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   height: 100%;
+  position: relative;
 }
 
 .truffle-card:hover {
@@ -105,14 +106,13 @@ function adicionarAoCarrinho() {
 }
 
 .truffle-card__media {
-  position: relative;
-  aspect-ratio: 4 / 3;
+  
   background: var(--gr-cream-200);
 }
 
 .truffle-card__media img {
   width: 100%;
-  height: 100%;
+  height: 280px;
   object-fit: cover;
   display: block;
 }
@@ -121,6 +121,7 @@ function adicionarAoCarrinho() {
   position: absolute;
   top: 10px;
   left: 10px;
+  z-index: 2;
 }
 
 .truffle-card__body {

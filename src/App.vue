@@ -2,10 +2,11 @@
 import Toast from 'primevue/toast'
 import MainLayout from '@/shared/layouts/MainLayout.vue'
 import AppHero from '@/shared/components/AppHero.vue'
-import TruffleList from '@/features/truffles/components/TruffleList.vue'
-import ComboList from '@/features/combos/components/ComboList.vue'
+
 import CartDrawer from '@/features/cart/components/CartDrawer.vue'
 import CheckoutDialog from '@/features/checkout/components/CheckoutDialog.vue'
+import AppTabs from './shared/components/AppTabs.vue'
+
 </script>
 
 <template>
@@ -13,10 +14,9 @@ import CheckoutDialog from '@/features/checkout/components/CheckoutDialog.vue'
     <AppHero />
 
     <div id="catalogo" class="gr-container gr-section">
-      <TruffleList />
+      <AppTabs />
     </div>
 
-    <ComboList />
   </MainLayout>
 
   <CartDrawer />

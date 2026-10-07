@@ -20,10 +20,13 @@ export const useTruffleStore = defineStore('truffles', {
       if (this.status === 'success' && !force) return
       this.status = 'loading'
       this.error = null
+
       try {
         this.items = await fetchTruffles()
+        console.log(this.items);
         this.status = 'success'
       } catch (err) {
+        console.log(err)
         this.error = err.message || 'Não foi possível carregar as trufas.'
         this.status = 'error'
       }
