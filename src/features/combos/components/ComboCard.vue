@@ -154,6 +154,7 @@ function adicionarAoCarrinho() {
             showButtons
             buttonLayout="horizontal"
             inputClass="combo-card__qty-input"
+            class="combo-card_box"
           />
         </div>
       </div>
@@ -278,6 +279,7 @@ function adicionarAoCarrinho() {
   align-items: center;
   gap: 8px;
   font-size: 0.8rem;
+  flex-wrap: wrap;
 }
 
 .combo-card__selector-name {
@@ -293,5 +295,10 @@ function adicionarAoCarrinho() {
 :deep(.combo-card__qty-input) {
   width: 56px;
   text-align: center;
+}
+
+.combo-card_box {
+  max-width: 135px;
+  width: 100%;
 }
 </style>
