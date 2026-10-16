@@ -113,14 +113,15 @@ async function enviarPedido() {
     cart.fechar()
 
   } catch (error) {
-    const mensagem = error instanceof Error ? error.message : 'Tente novamente em instantes.'
-
+    
     toast.add({
       severity: 'error',
       summary: 'Não foi possível registrar o pedido',
-      detail: mensagem,
+      detail: 'Tente novamente em instantes.',
       life: 4000
-    })
+    });
+
+    enviandoPedido.value = false;
   }
 }
 </script>
