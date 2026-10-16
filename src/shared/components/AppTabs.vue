@@ -8,6 +8,7 @@ import TabPanel from 'primevue/tabpanel';
 import TruffleList from '@/features/truffles/components/TruffleList.vue'
 import ComboList from '@/features/combos/components/ComboList.vue'
 import Gift from '../../features/gifts/components/Gift.vue';
+import Party from '../../features/party/components/Party.vue';
 </script>
 
 <template>

@@ -13,7 +13,6 @@ export function mascaraTelefone(valor) {
 }
 
 export function mascaraCep(valor) {
-  console.log(valor.value);
 
   if(valor) {
       valor = valor.replace(/\D/g, '');

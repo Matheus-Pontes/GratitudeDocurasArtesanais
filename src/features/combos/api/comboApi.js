@@ -1,11 +1,20 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+import combos from '../data/combos.json'
+
+/**
+ * Simula uma chamada de API real (com latência de rede e possibilidade
+ * de falha) para o catálogo de trufas. Quando houver um backend de
+ * verdade, basta trocar o corpo desta função por um fetch/axios real —
+ * a store e os componentes não precisam mudar.
+ */
+const NETWORK_DELAY_MS = 450
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 export async function fetchCombos() {
-  const response = await fetch(`${API_URL}/combos`)
-
-  if (!response.ok) {
-    throw new Error('Não foi possível carregar os combos.')
-  }
-
-  return response.json()
+  await delay(NETWORK_DELAY_MS)
+  
+  return  structuredClone(combos)
 }
+

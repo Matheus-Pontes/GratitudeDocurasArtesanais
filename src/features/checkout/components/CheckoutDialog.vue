@@ -36,21 +36,26 @@ watch(
       return
     }
 
-    frete.value = Math.round(await checkout.calcularFrete())
-
-    if (frete.value == 0 && cep.length > 0) {
-      toast.add({
-        severity: 'info',
-        summary: 'Distância muito longa',
-        detail: `Seu endereço está fora de nosso raio de entrega. 
-                \n Vamos trocar para retirada. 
-                \n Escolha um dos locais de preferência. 
-                \n Gratitude 🍬`,
-        life: 5000
-      });
-
-      checkout.form.entrega = "retirada";
+    if (cep.length == 9) {
+      const { freteCalculado, distanciaCliente } = await checkout.calcularFrete();
+  
+      frete.value = Math.round(freteCalculado);
+  
+      if (frete.value == 0 && distanciaCliente >= 15) {
+        toast.add({
+          severity: 'info',
+          summary: 'Distância muito longa',
+          detail: `Seu endereço está fora de nosso raio de entrega. 
+                  \n Vamos trocar para retirada. 
+                  \n Escolha um dos locais de preferência. 
+                  \n Gratitude 🍬`,
+          life: 5000
+        });
+  
+        checkout.form.entrega = "retirada";
+      }
     }
+
   },
   { immediate: true }
 )
@@ -139,7 +144,9 @@ async function enviarPedido() {
 
       <div class="checkout-form__field">
         <label for="telefone">Telefone / WhatsApp <span class="required">*</span></label>
-        <InputText id="telefone" v-model="checkout.form.telefone" maxlength="15" @input="checkout.form.telefone = mascaraTelefone(checkout.form.telefone)" placeholder="(11) 91234-5678" :disabled="enviandoPedido" />
+        <InputText id="telefone" 
+          v-model="checkout.form.telefone" maxlength="15" 
+          @input="checkout.form.telefone = mascaraTelefone(checkout.form.telefone)" placeholder="Ex: (00) 0000-0000" :disabled="enviandoPedido" />
       </div>
 
       <div class="checkout-form__field">
@@ -161,7 +168,10 @@ async function enviarPedido() {
 
         <div>
           <label for="cep">CEP <span class="required">*</span></label>
-          <InputText id="cep" class="checkout-form_w-full" v-model="checkout.form.cep" @input="checkout.form.cep = mascaraCep($event.target.value)" @blur="checkout.buscarCep" :disabled="enviandoPedido"/>
+          <InputText id="cep" class="checkout-form_w-full" 
+                    v-model="checkout.form.cep" 
+                    @input="checkout.form.cep = mascaraCep($event.target.value)" @blur="checkout.buscarCep"
+                    :disabled="enviandoPedido"/>
         </div>
 
         <div>
@@ -323,4 +333,8 @@ label .required {
   color: red;
 }
 
+input::placeholder, textarea::placeholder {
+  color: var(--gr-gold-300);
+  font-size: 14px;
+}
 </style>

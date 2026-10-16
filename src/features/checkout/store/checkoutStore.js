@@ -100,7 +100,7 @@ export const useCheckoutStore = defineStore('checkout', {
     },
 
     async buscarCep() {
-      if (this.form.cep.length > 0 && this.form.rua.length > 0) 
+      if (this.form.cep.length < 9) 
         return;
 
       const response = await fetch(`https://viacep.com.br/ws/${this.form.cep.trim()}/json/`);
@@ -119,7 +119,7 @@ export const useCheckoutStore = defineStore('checkout', {
     },
 
     async calcularFrete() {
-      if(this.form.cep.length == 0)
+      if (this.form.cep.length == 0)
         return;
 
       try {
@@ -142,7 +142,7 @@ export const useCheckoutStore = defineStore('checkout', {
         if (maisProxima.distKm <= 15) 
           resultado = maisProxima.distKm * 0.8;
         
-        return resultado;
+        return {freteCalculado: resultado, distanciaCliente: maisProxima.distKm};
       }
       catch(e) {
         return 0;
