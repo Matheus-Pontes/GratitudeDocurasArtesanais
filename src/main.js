@@ -10,6 +10,7 @@ import './shared/styles/tokens.css'
 import './shared/styles/base.css'
 
 import { GratitudePreset } from './shared/styles/gratitudePreset'
+import { vReveal } from './shared/directives/vReveal'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -50,5 +51,6 @@ app.use(PrimeVue, {
 })
 app.use(ToastService)
 app.use(ConfirmationService)
+app.directive('reveal', vReveal)
 
 app.mount('#app')

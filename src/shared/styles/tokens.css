@@ -1,28 +1,51 @@
 :root {
-  /* Paleta — extraída do cardápio Gratitude */
-  --gr-berry-900: #5c0f2c;   /* faixa "Linha Premium" */
-  --gr-berry-700: #8c1f4a;
-  --gr-berry-600: #a8285a;
-  --gr-pink-500: #d6336c;    /* rosa vivo do título "Gratitude" */
-  --gr-pink-300: #f2a9c4;
-  --gr-gold-500: #c99a3f;
-  --gr-gold-300: #e6c887;
+  /* Paleta — Identidade Visual Gratitude Doçuras Artesanais */
+  --gr-wine-950: #23040b;    /* Vinho quase preto para contraste */
+  --gr-wine-900: #380a14;    /* Vinho profundo do pill e logotipo */
+  --gr-wine-800: #4a0e1b;    /* Vinho nobre dos títulos */
+  --gr-wine-700: #681527;    /* Vinho médio */
+  --gr-berry-900: #4a0e1b;   /* Compatibilidade */
+  --gr-berry-700: #842038;
+  --gr-berry-600: #9e2a45;
+  --gr-marsala: #963249;     /* Destaque "momentos" itálico */
+  --gr-pink-500: #963249;
+  --gr-pink-300: #f6d8de;
+  --gr-blush: #fbf0f0;       /* Fundo da pill "Feitas à mão" */
+
+  /* Tons Dourados Metálicos Nobres */
+  --gr-gold-700: #9e7428;
+  --gr-gold-500: #c59a4e;    /* Dourado quente principal */
+  --gr-gold-400: #d8b268;
+  --gr-gold-300: #ebd39b;    /* Dourado suave */
+  --gr-gold-100: #fcf6eb;
+
+  /* Cremes e Baunilhas */
+  --gr-cream-50:  #fffdfa;
   --gr-cream-100: #fdf6f0;
-  --gr-cream-200: #fbeee4;
-  --gr-cream-300: #f5e2d3;
-  --gr-cacao-900: #3a1f28;
-  --gr-cacao-600: #6b4a44;
+  --gr-cream-200: #f9ede2;
+  --gr-cream-300: #f2decb;
+  --gr-cacao-900: #2e171d;
+  --gr-cacao-700: #4d2b27;
+  --gr-cacao-600: #66453f;
+  --gr-cacao-400: #8c6861;
 
   /* Tipografia */
-  --gr-font-display: 'Playfair Display', serif;
-  --gr-font-script: 'Caveat', cursive;
-  --gr-font-body: 'Poppins', sans-serif;
-  --gr-font-title: "Great Vibes", cursive;
+  --gr-font-display: 'Playfair Display', Georgia, serif;
+  --gr-font-script: 'Great Vibes', cursive;
+  --gr-font-body: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --gr-font-title: 'Playfair Display', Georgia, serif;
 
   /* Espaçamento e forma */
-  --gr-radius-sm: 10px;
-  --gr-radius-md: 18px;
-  --gr-radius-lg: 28px;
-  --gr-shadow-card: 0 10px 30px -12px rgba(92, 15, 44, 0.28);
-  --gr-shadow-card-hover: 0 18px 40px -14px rgba(92, 15, 44, 0.38);
+  --gr-radius-xs: 6px;
+  --gr-radius-sm: 12px;
+  --gr-radius-md: 20px;
+  --gr-radius-lg: 32px;
+  --gr-radius-pill: 9999px;
+
+  /* Sombras Nobres e Iluminação Suave */
+  --gr-shadow-sm: 0 4px 12px rgba(56, 10, 20, 0.06);
+  --gr-shadow-card: 0 12px 32px -8px rgba(56, 10, 20, 0.12), 0 2px 6px rgba(56, 10, 20, 0.04);
+  --gr-shadow-card-hover: 0 20px 42px -10px rgba(56, 10, 20, 0.22), 0 4px 12px rgba(197, 154, 78, 0.18);
+  --gr-shadow-gold: 0 8px 24px -4px rgba(197, 154, 78, 0.35);
+  --gr-shadow-pill: 0 10px 28px rgba(56, 10, 20, 0.38);
 }

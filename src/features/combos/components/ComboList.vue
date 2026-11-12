@@ -13,27 +13,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="combo-list" aria-labelledby="combos-especiais">
+  <section id="combos" class="combo-section" aria-labelledby="titulo-combos">
     <div class="gr-container">
-      <header class="combo-list__header">
-        <h2 id="combos-especiais">Combos Especiais</h2>
-        <p>Escolha os sabores da Linha Tradicional para montar sua caixinha.</p>
+      <header v-reveal class="combo-section__header">
+        <span class="gr-eyebrow">
+          <i class="pi pi-box"></i> Caixinhas & Kits
+        </span>
+        <h2 id="titulo-combos" class="combo-section__title">
+          Combos Especiais
+        </h2>
+        <p class="combo-section__subtitle">
+          Escolha os sabores da Linha Tradicional para compor sua caixinha personalizada, ou aproveite nossa sugestão sortida.
+        </p>
       </header>
 
-      <div v-if="store.isLoading" class="combo-list__state">
-        <ProgressSpinner strokeWidth="4" style="width: 40px; height: 40px" />
+      <div v-if="store.isLoading" class="combo-section__state">
+        <ProgressSpinner strokeWidth="4" style="width: 44px; height: 44px" />
+        <p>Carregando caixinhas especiais…</p>
       </div>
 
       <Message v-else-if="store.status === 'error'" severity="error" :closable="false">
         {{ store.error }}
       </Message>
 
-      <div v-else class="combo-list__grid">
+      <div v-else class="combo-section__grid">
         <ComboCard
           v-for="(combo, idx) in store.items"
           :key="combo.id"
+          v-reveal
+          :data-reveal-delay="idx * 150"
           :combo="combo"
-          
+          :destaque="combo.id === 'combo-5'"
         />
       </div>
     </div>
@@ -41,36 +51,56 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.combo-list {
-  padding: 20px 0 60px;
+.combo-section {
+  padding: 40px 0 60px;
+  position: relative;
 }
 
-.combo-list__header {
+.combo-section__header {
   text-align: center;
-  margin-bottom: 30px;
+  max-width: 640px;
+  margin: 0 auto 36px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 10px;
 }
 
-.combo-list__header h2 {
-  font-size: 1.9rem;
+.combo-section__title {
+  font-family: var(--gr-font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: var(--gr-wine-900);
+  line-height: 1.15;
 }
 
-.combo-list__header p {
+.combo-section__subtitle {
   color: var(--gr-cacao-600);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
+  line-height: 1.55;
 }
 
-.combo-list__state {
+.combo-section__state {
   display: flex;
-  justify-content: center;
-  padding: 40px 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 0;
+  color: var(--gr-cacao-600);
 }
 
-.combo-list__grid {
+.combo-section__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 600px) {
+  .combo-section {
+    padding: 30px 0 45px;
+  }
+  .combo-section__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 </style>
