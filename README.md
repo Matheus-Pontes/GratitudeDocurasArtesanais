@@ -38,3 +38,8 @@ src/
 - [x] Implementar mascara de cep
 - [x] ajustar mensagem do frete caso for maior que 15 km 
 - [x] ver questão do modal de finalizar pedidos para remover dados dos campos
+- [] Revisar textos dos combos e trufas individuais
+- [] Revisar funcionalidade de whatsapp
+- [] Revisar funcionalidade de frete
+- [] Revisar funcionalidade de enviar pedido pelo whatsapp - Colocar nosso whatsap e enviar para a pessoal.
+      - Comprar um outro chip e colocar em um plano para ser o contato oficial
